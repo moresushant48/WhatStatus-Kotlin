@@ -1,14 +1,22 @@
 package io.moresushant48.whatstatus
 
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class ImageAdapter(var images: ArrayList<Int>) :
+class ImageAdapter(private var context: Context, private var images: Array<Uri>) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
+
+    private val BASE_PATH: String =
+        Environment.getExternalStorageDirectory().toString() + "/WhatsApp/Media/.Statuses/"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -21,16 +29,17 @@ class ImageAdapter(var images: ArrayList<Int>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.imageView.setImageResource(images.get(position))
+        Glide.with(context)
+            .load(BASE_PATH + images[position])
+            .transition(DrawableTransitionOptions.withCrossFade(1000))
+            .centerCrop()
+            .into(holder.imageView)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var imageView: ImageView
+        var imageView: ImageView = itemView.findViewById(R.id.grid_item_image)
 
-        init {
-            imageView = itemView.findViewById(R.id.grid_item_image)
-        }
     }
 
 }

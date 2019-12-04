@@ -1,7 +1,9 @@
 package io.moresushant48.whatstatus
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +12,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
+
+    private lateinit var fileNames: Array<Uri>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,21 +24,18 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerImageView)
         recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = GridLayoutManager(this, 3)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
 
+        startApp()
+    }
 
-        val images = ArrayList<Int>()
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
-        images.add(R.drawable.ic_launcher_foreground)
+    private fun startApp() {
 
-        recyclerView.adapter = ImageAdapter(images)
+        fileNames = GetStatuses().getStatusFiles()
 
+        if (fileNames != null) {
+
+            recyclerView.adapter = ImageAdapter(this, fileNames)
+        }
     }
 }
