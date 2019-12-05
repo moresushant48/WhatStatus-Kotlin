@@ -31,7 +31,7 @@ class ImageAdapter(private var context: Context, private var images: Array<Uri>)
 
         Glide.with(context)
             .load(BASE_PATH + images[position])
-            .transition(DrawableTransitionOptions.withCrossFade(1000))
+            .transition(DrawableTransitionOptions.withCrossFade(600))
             .centerCrop()
             .into(holder.imageView)
     }
