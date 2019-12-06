@@ -13,7 +13,8 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
+
 
     private val STORAGE_PERMISSION_REQUEST_CODE: Int = 1000
     private lateinit var toolbar: Toolbar
@@ -35,11 +36,19 @@ class MainActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            ) {
                 Toast.makeText(this, "Please allow Storage Permission.", Toast.LENGTH_LONG).show()
-            }else askForPermission()
-        }else{
+            } else askForPermission()
+        } else {
             startApp()
         }
 
@@ -48,8 +57,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStatusItemClick(position: Int) {
+        Toast.makeText(this, "Clicked on item : $position", Toast.LENGTH_LONG).show()
+    }
+
     private fun askForPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            STORAGE_PERMISSION_REQUEST_CODE
+        )
     }
 
     private fun startApp() {
@@ -57,9 +74,8 @@ class MainActivity : AppCompatActivity() {
         fileNames = GetStatuses().getStatusFiles()
 
         if (fileNames != null) {
-
-            recyclerView.adapter = ImageAdapter(this, fileNames)
-        }
+            recyclerView.adapter = ImageAdapter(this, fileNames, this)
+        } else Toast.makeText(this, "No Statuses available.", Toast.LENGTH_LONG).show()
 
         fileRefreshLayout.isRefreshing = false
     }
@@ -69,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        when(requestCode){
+        when (requestCode) {
 
             STORAGE_PERMISSION_REQUEST_CODE -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     startApp()
                 else {
                     Toast.makeText(this, "App requires storage access.", Toast.LENGTH_LONG).show()
@@ -85,8 +101,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             askForPermission()
-        }else startApp()
+        } else startApp()
     }
 }
