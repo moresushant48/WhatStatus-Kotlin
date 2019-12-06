@@ -9,12 +9,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
 
+    private val BASE_PATH: String =
+        Environment.getExternalStorageDirectory().toString() + "/WhatsApp/Media/.Statuses/"
 
     private val STORAGE_PERMISSION_REQUEST_CODE: Int = 1000
     private lateinit var toolbar: Toolbar
@@ -58,7 +63,14 @@ class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
     }
 
     override fun onStatusItemClick(position: Int) {
-        Toast.makeText(this, "Clicked on item : $position", Toast.LENGTH_LONG).show()
+
+        val i = Intent(this@MainActivity, ViewStatus::class.java)
+        i.putExtra(
+            "uri",
+            BASE_PATH + fileNames[position]
+        )
+        startActivity(i)
+
     }
 
     private fun askForPermission() {
