@@ -37,24 +37,26 @@ class ViewStatus : AppCompatActivity() {
         statusVideo = findViewById(R.id.statusVideo)
 
         fileUriString = intent.getStringExtra("uri")
+        var file = File(fileUriString)
+        var fileUri: Uri = FileProvider.getUriForFile(this@ViewStatus, "io.moresushant48.fileprovider", file)
 
         val mediaController = MediaController(this)
 
         if (isStatusAnImage()) {
             statusImage.visibility = View.VISIBLE
             Glide.with(this@ViewStatus)
-                .load(fileUriString)
+                .load(fileUri)
                 .into(statusImage)
         } else {
 
             statusImage.visibility = View.VISIBLE
             Glide.with(this@ViewStatus)
-                .load(fileUriString)
+                .load(fileUri)
                 .into(statusImage)
 
             statusVideoPlaySign.visibility = View.VISIBLE
             statusVideo.visibility = View.VISIBLE
-            statusVideo.setVideoURI(Uri.parse(fileUriString))
+            statusVideo.setVideoURI(fileUri)
 
             statusVideo.setMediaController(mediaController)
             mediaController.setAnchorView(statusVideo)
@@ -72,7 +74,7 @@ class ViewStatus : AppCompatActivity() {
         }
     }
 
-    fun isStatusAnImage(): Boolean {
+    private fun isStatusAnImage(): Boolean {
 
         return fileUriString.endsWith(".jpg")
     }
