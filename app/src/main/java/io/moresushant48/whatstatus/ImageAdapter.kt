@@ -37,6 +37,7 @@ class ImageAdapter(
             var imgPlaySign =
                 holder.constraintLayout.findViewById<ImageView>(R.id.statusVideoPlaySign)
             imgPlaySign.visibility = View.VISIBLE
+            holder.setIsRecyclable(false)
         }
         
         Glide.with(context)
