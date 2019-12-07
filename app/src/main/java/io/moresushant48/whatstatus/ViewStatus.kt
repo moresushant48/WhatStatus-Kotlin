@@ -23,6 +23,8 @@ class ViewStatus : AppCompatActivity() {
     private lateinit var statusImage: ImageView
     private lateinit var statusVideo: VideoView
 
+    private lateinit var fabStatusShare: FloatingActionButton
+
     private lateinit var fileUriString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,8 @@ class ViewStatus : AppCompatActivity() {
 
         statusImage = findViewById(R.id.statusImage)
         statusVideo = findViewById(R.id.statusVideo)
+
+        fabStatusShare = findViewById(R.id.fabStatusShare)
 
         fileUriString = intent.getStringExtra("uri")
         var file = File(fileUriString)
@@ -72,6 +76,20 @@ class ViewStatus : AppCompatActivity() {
             imgStatusVideoPlaySign.visibility = View.VISIBLE
             statusImage.visibility = View.VISIBLE
         }
+
+        fabStatusShare.setOnClickListener {
+            var i = Intent(Intent.ACTION_SEND)
+            i.putExtra(Intent.EXTRA_STREAM, fileUri)
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            if (isStatusAnImage())
+                i.type = "image/*"
+            else
+                i.type = "video/*"
+
+            startActivity(Intent.createChooser(i, "Choose"))
+        }
+
     }
 
     private fun isStatusAnImage(): Boolean {
