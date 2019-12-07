@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -32,6 +33,12 @@ class ImageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        if (images[position].toString().endsWith(".mp4")) {
+            var imgPlaySign =
+                holder.constraintLayout.findViewById<ImageView>(R.id.statusVideoPlaySign)
+            imgPlaySign.visibility = View.VISIBLE
+        }
+        
         Glide.with(context)
             .load(BASE_PATH + images[position])
             .transition(DrawableTransitionOptions.withCrossFade(600))
@@ -43,6 +50,7 @@ class ImageAdapter(
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         var imageView: ImageView = itemView.findViewById(R.id.grid_item_image)
+        var constraintLayout: ConstraintLayout = itemView.findViewById(R.id.grid_item_layout)
 
         init {
             itemView.setOnClickListener(this)
