@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Environment
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
 
     override fun onStatusItemClick(position: Int) {
 
+        val pos = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+        getSharedPreferences("rv", Context.MODE_PRIVATE).edit().putInt("pos", pos).apply()
         val i = Intent(this@MainActivity, ViewStatus::class.java)
         i.putExtra(
             "uri",
@@ -87,6 +90,7 @@ class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
 
         if (fileNames != null) {
             recyclerView.adapter = ImageAdapter(this, fileNames, this)
+            recyclerView.scrollToPosition(getSharedPreferences("rv", Context.MODE_PRIVATE).getInt("pos", 0))
         } else Toast.makeText(this, "No Statuses available.", Toast.LENGTH_LONG).show()
 
         fileRefreshLayout.isRefreshing = false
