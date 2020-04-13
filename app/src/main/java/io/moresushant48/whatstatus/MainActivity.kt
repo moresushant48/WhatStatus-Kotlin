@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), OnStatusItemClickListener {
 
     private fun startApp() {
 
-        fileNames = GetStatuses().getStatusFiles()
+        fileNames = GetStatuses().getStatusFiles(baseContext)
 
         if (fileNames != null) {
             recyclerView.adapter = ImageAdapter(this, fileNames, this)
