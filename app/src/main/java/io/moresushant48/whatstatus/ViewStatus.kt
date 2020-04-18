@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import android.widget.MediaController
@@ -41,8 +40,8 @@ class ViewStatus : AppCompatActivity() {
         fabStatusShare = findViewById(R.id.fabStatusShare)
 
         fileUriString = intent.getStringExtra("uri")
-        var file = File(fileUriString)
-        var fileUri: Uri = FileProvider.getUriForFile(this@ViewStatus, "io.moresushant48.fileprovider", file)
+        val file = File(fileUriString)
+        val fileUri: Uri = FileProvider.getUriForFile(this@ViewStatus, "io.moresushant48.fileprovider", file)
 
         val mediaController = MediaController(this)
 
@@ -78,7 +77,7 @@ class ViewStatus : AppCompatActivity() {
         }
 
         fabStatusShare.setOnClickListener {
-            var i = Intent(Intent.ACTION_SEND)
+            val i = Intent(Intent.ACTION_SEND)
             i.putExtra(Intent.EXTRA_STREAM, fileUri)
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 

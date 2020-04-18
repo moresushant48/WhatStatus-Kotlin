@@ -34,7 +34,7 @@ class ImageAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         if (images[position].toString().endsWith(".mp4")) {
-            var imgPlaySign =
+            val imgPlaySign =
                 holder.constraintLayout.findViewById<ImageView>(R.id.statusVideoPlaySign)
             imgPlaySign.visibility = View.VISIBLE
             holder.setIsRecyclable(false)

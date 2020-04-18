@@ -1,4 +1,4 @@
-package io.moresushant48.whatstatus
+package io.moresushant48.whatstatus.Services
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import java.io.File
 
 class UploadService : JobIntentService() {
 
-    public lateinit var repository: Repository
+    private lateinit var repository: Repository
 
     companion object {
 
@@ -24,7 +24,8 @@ class UploadService : JobIntentService() {
 
         fun enqueueWork(context: Context?, intent: Intent) {
             if (context != null) {
-                enqueueWork(context, UploadService::class.java, JOB_ID, intent)
+                enqueueWork(context, UploadService::class.java,
+                    JOB_ID, intent)
             }
         }
     }
